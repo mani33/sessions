@@ -12,50 +12,29 @@ classdef Sets < dj.Relvar & dj.AutoPopulate
         popRel = detect.Params;
     end
     
-    methods 
+    methods
         function self = Sets(varargin)
             self.restrict(varargin{:})
         end
     end
     
-    methods (Access=protected)        
+    methods (Access=protected)
         function makeTuples(~, key)
             switch fetch1(detect.Params(key) * detect.Methods, 'detect_method_name')
-                case 'Tetrodes'
-                    spikesCb = @spikesTetrodes;
-                    spikesFile = 'Sc%d.Htt';
-                    lfpCb = @extractLfpTetrodes;
-                    muaCb = @extractMuaTetrodes;
-                    pathCb = @extractPath;
                 case 'TetrodesV2'
                     spikesCb = @spikesTetrodesV2;
                     spikesFile = 'Sc%d.Htt';
-                    lfpCb = @extractLfpTetrodes;
-                    muaCb = @extractMuaTetrodes;
-                    pathCb = @extractPath;
-                case 'SiliconProbes'
-                    spikesCb = @spikesSiliconProbes;
-                    spikesFile = 'Sc%d.Htt';
-%                     lfpCb = @extractLfpSiliconProbes;
-%                     muaCb = @extractMuaSiliconProbes;
-%                     pathCb = @extractPath;
-                    lfpCb = []; muaCb = []; pathCb = [];
-                case 'Utah'
-                    spikesCb = @spikesUtah;
-                    spikesFile = 'Sc%03u.Hsp';
-                    lfpCb = []; muaCb = []; pathCb = [];
+                    %                     lfpCb = @extractLfpTetrodes;
+                    lfpCb = [];
             end
-            useTemp = true;
-
+            
+            
             % if not in toolchain mode, don't extract LFP
             if ~fetch1(detect.Params(key), 'use_toolchain')
                 lfpCb = [];
-                muaCb = [];
-                pathCb = [];
-                useTemp = false;
             end
-
-            processSet(key, spikesCb, spikesFile, lfpCb, muaCb, pathCb, useTemp);
+            
+            processSet(key, spikesCb, spikesFile, lfpCb);
         end
     end
 end

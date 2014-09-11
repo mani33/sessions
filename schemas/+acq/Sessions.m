@@ -1,16 +1,19 @@
 %{
 acq.Sessions (manual) # list of sessions
 
--> acq.Subjects
-setup           : tinyint unsigned      # setup number
+-> acq.Animals
+
 session_start_time: bigint              # start session timestamp
+
 ---
+
 session_stop_time           : bigint                        # end of session timestamp
-experimenter                : enum('James','Alex','Mani','Allison','Tori','Jacob','Dimitri','Cathryn','Manolis','Dennis','George','Shan')# name of person running exp
+experimenter                : enum('Mani','Theo','Billy')# name of person running exp
 session_path                : varchar(255)                  # path to the data
 session_datetime=null       : datetime                      # readable format of session start
-hammer=0                    : tinyint                       # recorded by Hammer?
-recording_software=Acquisition2.0 : enum('Acquisition2.0','Hammer','Blackrock','Neuralynx') # software used to record the data
+room_num                    : varchar(24)      # room number where exp happened
+acq_system="Neuralynx": enum('Neuralynx','Plexon') # data acq system
+
 %}
 
 classdef Sessions < dj.Relvar

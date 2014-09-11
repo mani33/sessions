@@ -2,7 +2,7 @@
 acq.Subjects (manual)       # list of subjects
 subject_id   : int unsigned # unique identifier for subject
 ---
-subject_name : varchar(255) # name of the subject
+subject_type: enum('mouse','rat') # mouse or rat
 %}
 
 classdef Subjects < dj.Relvar

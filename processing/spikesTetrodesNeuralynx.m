@@ -1,9 +1,9 @@
-function [electrodes, artifacts] = spikesTetrodesV2(sourceFile, spikesFile)
+function [electrodes, artifacts] = spikesTetrodesNeuralynx(sourceFile, spikesFile)
 % Spike detection callback for tetrodes (improved version)
 % AE 2012-11-09
 
 % determine which tetrodes were recorded
-br = baseReaderNeuralynx(sourceFile);
+br = baseReaderNeuralynx(sourceFile,channel_prefix);
 tetrodes = getTetrodes(br);
 refs = getRefs(br);
 channels = [arrayfun(@(x) sprintf('t%dc*', x), tetrodes, 'uni', false), ...
@@ -13,21 +13,18 @@ close(br);
 
 n = numel(electrodes);
 artifacts = cell(1, n);
-% if exist('matlabpool', 'file')
-%     matlabpool
-%     parfor i = 1:n
-%         artifacts{i} = run(spikesFile, sourceFile, electrodes(i), channels{i});
-%     end
-%     matlabpool close
-% else
-%     for i = 1:n
-%         artifacts{i} = run(spikesFile, sourceFile, electrodes(i), channels{i});
-%     end
-% end
-
-for i = 1:n
-    artifacts{i} = run(spikesFile, sourceFile, electrodes(i), channels{i});
+if exist('matlabpool', 'file')
+    matlabpool
+    parfor i = 1:n
+        artifacts{i} = run(spikesFile, sourceFile, electrodes(i), channels{i});
+    end
+    matlabpool close
+else
+    for i = 1:n
+        artifacts{i} = run(spikesFile, sourceFile, electrodes(i), channels{i});
+    end
 end
+
 
 function artifacts = run(spikesFile, sourceFile, electrode, channel)
 
@@ -36,6 +33,6 @@ if electrode < 100
 else
     fprintf('Extracting spikes on reference %d\n', electrode - 100);
 end    
-br = baseReaderNeuralynx(sourceFile, channel);
+br = baseReader(sourceFile, channel);
 outFile = sprintf(strrep(spikesFile, '\', '\\'), electrode);
-artifacts = detectSpikesTetrodesV2(br, outFile);
+artifacts = detectspikesTetrodesNeuralynx(br, outFile);

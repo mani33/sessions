@@ -5,12 +5,11 @@ acq.Ephys (manual)       # electrophysiology recordings
 ephys_start_time       : bigint       # start session timestamp
 ---
 ephys_stop_time        : bigint       # end of session timestamp
-ephys_path             : varchar(255) # path to the ephys data
--> acq.EphysTypes
+ephys_path             : varchar(256) # path to the ephys data
+recording_software     : varchar(256) # name of the recording software with version number
 %}
 
-% removed
-% rec_task_name          : enum('Utah','ChronicTetrode') # name of task in M & A Explorer
+
 
 classdef Ephys < dj.Relvar
     properties(Constant)
