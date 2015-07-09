@@ -16,5 +16,13 @@ other_id=Null: varchar(256) # any other alternative id
 animals_ts=CURRENT_TIMESTAMP :  timestamp # automatically generated
 %}
 
-classdef Animals < dj.Relvar
+classdef Animals < dj.Relvar   
+    properties(Constant)
+        table = dj.Table('acq.Animals');
+    end    
+    methods 
+        function self = Animals(varargin)
+            self.restrict(varargin{:})
+        end
+    end
 end
