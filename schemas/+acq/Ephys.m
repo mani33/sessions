@@ -16,7 +16,7 @@ classdef Ephys < dj.Relvar
         table = dj.Table('acq.Ephys');
     end
     
-    methods 
+    methods
         function self = Ephys(varargin)
             self.restrict(varargin{:})
         end
@@ -34,6 +34,30 @@ classdef Ephys < dj.Relvar
             br = baseReader(getFileName(self), varargin{:});
         end
         
+        function d = getSpikeTraceByTetrode(self,tetNum,sampleIndex,chSpacingScale)
+            %       function d = getSpikeTraceByTetrode(self,tetNum,sampleIndex,chSpacingScale)
+            if nargin < 4
+                chSpacingScale = 0;
+            end
+            key = fetch(self);
+            chFiles = sort(fetchn(cont.SpikeTrace(key,cont.Chan(key,...
+                sprintf('chan_name like ''t%u%%''',tetNum))),'spike_tr_file'));
+            ns = length(sampleIndex);
+            d = zeros(ns,4);
+            rr = nan(1,4);
+            for i = 1:4
+                cf = strrep(chFiles{i},'y:\','C:\');
+                br = baseReaderNeuralynx(cf);
+                val = br(sampleIndex,1);
+                rr(i) = range(val);
+                d(:,i) = val;
+            end
+            rv = max(rr);
+            for i = 1:4
+                d(:,i) = d(:,i) + (i-1)*rv*chSpacingScale;
+            end
+            
+        end
         function time = getHardwareStartTime(self)
             % Get the hardware start time for the tuple in relvar
             %   time = getHardwareStartTime(self)
