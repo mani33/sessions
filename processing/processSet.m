@@ -2,7 +2,7 @@ function processSet(key, spikesCb, spikesFile, lfpCb)
 % TODO: write documentation
 
 
-parToolbox = logical(exist('matlabpool', 'file'));
+% parToolbox = logical(exist('matlabpool', 'file'));
 
 assert(isfield(key, 'session_start_time') && isfield(key, 'ephys_start_time') && isfield(key, 'detect_method_num'), 'Incomplete primary key!')
 assert(count(detect.Params(key)) == 1, 'Did not find a detection that matches this key!')
@@ -21,14 +21,14 @@ lfpFile = 'lfp%d';
 % stage the files
 destDir = localProcessedDir;
 
-% If we need to process an LFP kick of these jobs now on a thread
-if ~count(cont.Lfp(key)) && ~isempty(lfpCb)
-    outDir = fullfilefs(destDir, lfpDir);
-    createOrEmpty(outDir)
-    
-    lfpCb(sourceFile, fullfilefs(outDir, lfpFile));
-    muaCb(sourceFile, fullfilefs(outDir, muaFile));
-end
+% % If we need to process an LFP kick of these jobs now on a thread
+% if ~count(cont.Lfp(key)) && ~isempty(lfpCb)
+%     outDir = fullfilefs(destDir, lfpDir);
+%     createOrEmpty(outDir)
+%     
+%     lfpCb(sourceFile, fullfilefs(outDir, lfpFile));
+%     muaCb(sourceFile, fullfilefs(outDir, muaFile));
+% end
 
 
 % create or clear output directory for spikes
@@ -68,13 +68,13 @@ for i = 1 : n
     insert(detect.Electrodes, tuple);
     tuple = key;
     tuple.electrode_num = e;
-    a = artifacts{i};
-    m = size(a, 1);
-    for j = 1 : m
-        tuple.artifact_start = a(j, 1);
-        tuple.artifact_end = a(j, 2);
-        insert(detect.NoiseArtifacts, tuple);
-    end
+%     a = artifacts{i};
+%     m = size(a, 1);
+%     for j = 1 : m
+%         tuple.artifact_start = a(j, 1);
+%         tuple.artifact_end = a(j, 2);
+%         insert(detect.NoiseArtifacts, tuple);
+%     end
 end
 
 

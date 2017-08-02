@@ -26,6 +26,10 @@ classdef Sets < dj.Relvar & dj.AutoPopulate
                     spikesFile = 'Sc%d.Htt';
                     %                     lfpCb = @extractLfpTetrodes;
                     lfpCb = [];
+                    case 'SingleElectrode'
+                    spikesCb = @spikesSingleElectrode;
+                    spikesFile = 'Sc%d.Htt';
+                    lfpCb = []; muaCb = []; pathCb = [];
             end
             
             

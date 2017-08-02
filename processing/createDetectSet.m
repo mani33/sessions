@@ -23,7 +23,10 @@ if nargin < 3
     useToolchain = true;
 end
 tuple = detectKey;
-ephysFolder = fileparts(fetch1(acq.Ephys(ephysKey), 'ephys_path'));
-tuple.ephys_processed_path = to(RawPathMap, ephysFolder, '/processed');
+ephysFolder = fetch1(acq.Ephys(ephysKey), 'ephys_path');
+% tuple.ephys_processed_path = to(RawPathMap, ephysFolder, '/processed');
+pp = strrep(ephysFolder, 'y:','C:');
+pp = strrep(pp,'raw','processed');
+tuple.ephys_processed_path = pp;
 tuple.use_toolchain = useToolchain;
 insert(detect.Params, tuple);

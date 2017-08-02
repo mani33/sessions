@@ -12,7 +12,7 @@ function processSession(sessKey, detectMethod, sortMethod)
 if isstruct(sessKey)
     sessKey = fetch(acq.Sessions(sessKey));
 else
-    sessKey = fetch(sessKey)
+    sessKey = fetch(sessKey);
 end
 
 if nargin < 2, detectMethod = []; end
@@ -24,22 +24,22 @@ if ischar(sessKey)
     sessKey = fetch(acq.Sessions(sprintf('session_path LIKE "%%%s%%"', folder(3:end))));
 end
 
-% do a cleanup before processing 
-% fixes missing stop_times and updates the t0 in the raw data files
-populate(acq.SessionsCleanup, sessKey);
-
-% find stimulation sessions that were recorded
-populate(acq.EphysStimulationLink, sessKey);
-
-% find stimulation sessions that were recorded
-populate(acq.AodStimulationLink, sessKey);
+% % do a cleanup before processing 
+% % fixes missing stop_times and updates the t0 in the raw data files
+% populate(acq.SessionsCleanup, sessKey);
+% 
+% % find stimulation sessions that were recorded
+% populate(acq.EphysStimulationLink, sessKey);
+% 
+% % find stimulation sessions that were recorded
+% populate(acq.AodStimulationLink, sessKey);
 
 % process ephys recordings
 ephysKeys = fetch(acq.Ephys(sessKey));
 n = numel(ephysKeys);
 for i = 1:n
     [ts, te] = fetch1(acq.Ephys(ephysKeys(i)), 'ephys_start_time', 'ephys_stop_time');
-    mins = round(double(te - ts) / 1000 / 60);
+    mins = round(double(te - ts)*(1e-6) / 60);
     hours = floor(mins / 60);
     mins = rem(mins, 60);
     fprintf('Process session %d of %d (duration: %d:%d h)? [Y/n] ', i, n, hours, mins);
@@ -50,8 +50,8 @@ for i = 1:n
     end
 end
 
-% synchronize stimualtions
-for k = sessKey'
-    populate(acq.StimulationSync, k);
-    close all
-end
+% % synchronize stimualtions
+% for k = sessKey'
+%     populate(acq.StimulationSync, k);
+%     close all
+% end
